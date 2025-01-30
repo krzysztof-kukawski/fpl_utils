@@ -13,7 +13,7 @@ def find_by_id(players: PlayerRoster, pl_id: int) -> Player:
 
 data = requests.get('https://fantasy.premierleague.com/api/bootstrap-static/')
 data = json.loads(data.content)
-
+print(type(data['elements']))
 roster = PlayerRoster(data['elements'])
 
 for gw in range(1, 22):
@@ -24,7 +24,7 @@ for gw in range(1, 22):
         points = elem['stats']['total_points']
         play_id = elem['id']
         pl = find_by_id(roster, play_id)
-        pl.add_points(gw, points)
+        pl.extend_history(gw, points)
 
 for p in roster:
-    print(p.name, p.points)
+    print(p.name, p.history)
