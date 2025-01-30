@@ -1,3 +1,6 @@
+"""
+main script
+"""
 import json
 
 import requests
@@ -6,6 +9,12 @@ from src.players import PlayerRoster, Player
 
 
 def find_by_id(players: PlayerRoster, pl_id: int) -> Player | None:
+    """
+
+    :param players: PlayerRoster
+    :param pl_id: int
+    :return:
+    """
     for player in players:
         if player.id == pl_id:
             return player
