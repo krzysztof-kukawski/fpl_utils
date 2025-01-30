@@ -1,3 +1,5 @@
+"""players module"""
+
 from typing import Iterator
 
 
@@ -17,9 +19,8 @@ class PlayerRoster:
     def __init__(self, elem_data: list[dict]) -> None:
         self.players = []
         for elem in elem_data:
-            player = Player(elem['id'], elem['web_name'])
+            player = Player(elem["id"], elem["web_name"])
             self.players.append(player)
 
     def __iter__(self) -> Iterator[Player]:
-        for player in self.players:
-            yield player
+        yield from self.players
