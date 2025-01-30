@@ -9,6 +9,7 @@ class Player:
     """
     FPL player class
     """
+
     def __init__(self, player_id: int, name: str) -> None:
         self.id = player_id
         self.name = name
@@ -38,6 +39,7 @@ class PlayerRoster:
     """
     Collection class for storing players
     """
+
     def __init__(self, elem_data: list[dict]) -> None:
         self.players = []
         for elem in elem_data:
@@ -46,3 +48,6 @@ class PlayerRoster:
 
     def __iter__(self) -> Iterator[Player]:
         yield from self.players
+
+    def __len__(self) -> int:
+        return len(self.players)
