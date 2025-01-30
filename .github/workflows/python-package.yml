@@ -34,7 +34,7 @@ jobs:
       run: |
         export PYTHONPATH=$PYTHONPATH:$(pwd)/src
         echo "PYTHONPATH set to: $PYTHONPATH"
-        pytest --maxfail=3 --disable-warnings -v
+        pytest .
 
     - name: Run pylint
       run: |
