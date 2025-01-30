@@ -2,6 +2,8 @@
 
 from typing import Iterator
 
+import pandas as pd
+
 
 class Player:
     def __init__(self, player_id: int, name: str) -> None:
@@ -13,6 +15,9 @@ class Player:
         gw_stats = {"gw": gw, "points": points}
 
         self.history.append(gw_stats)
+
+    def to_dataframe(self):
+        return pd.DataFrame(self.history)
 
 
 class PlayerRoster:

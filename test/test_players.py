@@ -1,5 +1,8 @@
 import unittest
 
+import pandas as pd
+from pandas.testing import assert_frame_equal
+
 from src.players import Player, PlayerRoster
 
 
@@ -11,6 +14,16 @@ class PlayerTest(unittest.TestCase):
 
         actual = [{"gw": 11, "points": 8}, {"gw": 1, "points": 3}]
         self.assertEqual(test_player.history, actual)
+
+    def test_to_dataframe(self):
+        test_player = Player(9, "test_player")
+        test_player.extend_history(11, 8)
+        test_player.extend_history(1, 3)
+
+        player_frame = test_player.to_dataframe()
+        test_frame = pd.DataFrame([{"gw": 11, "points": 8}, {"gw": 1, "points": 3}])
+
+        assert_frame_equal(player_frame, test_frame)
 
 
 class PlayerRosterTest(unittest.TestCase):
