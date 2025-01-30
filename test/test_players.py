@@ -16,7 +16,10 @@ class PlayerTest(unittest.TestCase):
 class PlayerRosterTest(unittest.TestCase):
 
     def test_roster(self):
-        test_data = [{"id": 121, "web_name": "test_player1"}, {"id": 31, "web_name": "test_player2"}]
+        test_data = [
+            {"id": 121, "web_name": "test_player1"},
+            {"id": 31, "web_name": "test_player2"},
+        ]
         test_roster = PlayerRoster(test_data)
 
         test_players = [player for player in test_roster]
@@ -27,5 +30,5 @@ class PlayerRosterTest(unittest.TestCase):
         self.assertEqual(test_players[1].id, 31)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
