@@ -5,21 +5,7 @@ import json
 
 import requests
 
-from src.players import PlayerRoster, Player
-
-
-def find_by_id(players: PlayerRoster, pl_id: int) -> Player | None:
-    """
-
-    :param players: PlayerRoster
-    :param pl_id: int
-    :return:
-    """
-    for player in players:
-        if player.id == pl_id:
-            return player
-    return None
-
+from src.players import PlayerRoster
 
 data = requests.get(
     "https://fantasy.premierleague.com/api/bootstrap-static/", timeout=60
@@ -34,11 +20,7 @@ for gw in range(1, 22):
     )
     gw_data = json.loads(gw_data.content)
 
-    for elem in gw_data["elements"]:
-        points = elem["stats"]["total_points"]
-        play_id = elem["id"]
-        pl = find_by_id(roster, play_id)
-        pl.extend_history(gw, points)
+    roster.extend_history(gw, gw_data["elements"])
 
-for p in roster:
-    print(p.name, p.history)
+for player in roster:
+    print(player.name, player.history)
