@@ -51,3 +51,29 @@ class PlayerRoster:
 
     def __len__(self) -> int:
         return len(self.players)
+
+    def find_by_id(self, player_id: int) -> Player | None:
+        """
+
+        :param player_id:
+        :return:
+        """
+        for player in self:
+            if player.id == player_id:
+                return player
+
+        return None
+
+    def extend_history(self, gw: int, gw_stats: list[dict]) -> None:
+        """
+
+        :param gw:
+        :param gw_stats:
+        :return:
+        """
+        for stats in gw_stats:
+            player_id = stats['id']
+            player = self.find_by_id(player_id)
+            if player:
+                points = stats['stats']['total_points']
+                player.extend_history(gw, points)
