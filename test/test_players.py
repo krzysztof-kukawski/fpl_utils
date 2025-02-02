@@ -1,27 +1,30 @@
 import unittest
-
+import os
 import pandas as pd
 from pandas.testing import assert_frame_equal
 
-from src.players import Player, PlayerRoster
+from src.reading.players import Player, PlayerRoster
 
 
 class PlayerTest(unittest.TestCase):
     def test_extend_history(self):
         test_player = Player(9, "test_player")
-        test_player.extend_history(11, 8)
-        test_player.extend_history(1, 3)
+        test_player.extend_history(11, {"points": 8})
+        test_player.extend_history(1, {"points": 3})
 
-        actual = [{"gw": 11, "points": 8}, {"gw": 1, "points": 3}]
+        actual = [{"gw": 11, 'stats': {'points': 8}}, {"gw": 1, 'stats': {'points': 3}}]
         self.assertEqual(test_player.history, actual)
 
     def test_to_dataframe(self):
+        cwd = os.path.dirname(__file__)
+        test_data = os.path.join(cwd, "data", "test_player.csv")
+
         test_player = Player(9, "test_player")
-        test_player.extend_history(11, 8)
-        test_player.extend_history(1, 3)
+        test_player.extend_history(11, {'points': 8})
+        test_player.extend_history(1, {'points': 3})
 
         player_frame = test_player.to_dataframe()
-        test_frame = pd.DataFrame([{"gw": 11, "points": 8}, {"gw": 1, "points": 3}])
+        test_frame = pd.read_csv(test_data, index_col=0)
 
         assert_frame_equal(player_frame, test_frame)
 
@@ -58,6 +61,22 @@ class PlayerRosterTest(unittest.TestCase):
         self.assertEqual(found_player, test_player)
         self.assertEqual(not_found, None)
 
+    def test_find_by_name(self):
+        test_data = [
+            {"id": 121, "web_name": "test_player1"},
+            {"id": 31, "web_name": "test_player2"},
+        ]
+        test_roster = PlayerRoster(test_data)
+
+        test_player = {"id": 121, "name": "test_player1"}
+        found_player = test_roster.find_by_name("test_player1")
+        found_player = {"id": found_player.id, "name": found_player.name}
+
+        not_found = test_roster.find_by_name("test_player3")
+
+        self.assertEqual(found_player, test_player)
+        self.assertEqual(not_found, None)
+
     def test_extend_history(self):
         gw1 = [
             {'id': 721, 'stats': {'total_points': 3}},
@@ -66,8 +85,8 @@ class PlayerRosterTest(unittest.TestCase):
             {'id': 721, 'stats': {'total_points': 1}},
             {'id': 722, 'stats': {'total_points': 9}}]
 
-        extended_hist_1 = [{"gw": 1, "points": 3}, {"gw": 2, "points": 1}]
-        extended_hist_2 = [{"gw": 1, "points": 0}, {"gw": 2, "points": 9}]
+        extended_hist_1 = [{"gw": 1, 'stats': {'total_points': 3}}, {"gw": 2, 'stats': {'total_points': 1}}]
+        extended_hist_2 = [{"gw": 1, 'stats': {'total_points': 0}}, {"gw": 2, 'stats': {'total_points': 9}}]
 
         test_players = [
             {"id": 721, "web_name": "test_player1"},

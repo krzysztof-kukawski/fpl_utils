@@ -13,26 +13,33 @@ class Player:
     def __init__(self, player_id: int, name: str) -> None:
         self.id = player_id
         self.name = name
-        self.history = []
+        self.history: list[dict] = []
 
-    def extend_history(self, gw: int, points: int) -> None:
+    def extend_history(self, gw: int, stats: dict) -> None:
         """
-        Add a particular gameweek to player's history
+        Add a particular game week to player's history
+        :param stats:
         :param gw:
-        :param points:
         :return:
         """
-        gw_stats = {"gw": gw, "points": points}
+        gw_stats = {"gw": gw, "stats": stats}
 
         self.history.append(gw_stats)
 
-    def to_dataframe(self):
+    def to_dataframe(self) -> pd.DataFrame:
         """
 
         :return: pd.DataFrame
             player's history in DataFrame format
         """
-        return pd.DataFrame(self.history)
+        df = pd.DataFrame()
+        for i in self.history:
+            new_df = pd.DataFrame(i['stats'], index=[i['gw']])
+            df = pd.concat([df, new_df])
+
+        df['name'] = self.name
+        df['id'] = self.id
+        return df
 
 
 class PlayerRoster:
@@ -64,6 +71,18 @@ class PlayerRoster:
 
         return None
 
+    def find_by_name(self, name: str) -> Player | None:
+        """
+
+        :param name:
+        :return:
+        """
+        for player in self:
+            if player.name == name:
+                return player
+
+        return None
+
     def extend_history(self, gw: int, gw_stats: list[dict]) -> None:
         """
 
@@ -71,9 +90,9 @@ class PlayerRoster:
         :param gw_stats:
         :return:
         """
-        for stats in gw_stats:
-            player_id = stats['id']
+        for player_stats in gw_stats:
+            player_id = player_stats['id']
             player = self.find_by_id(player_id)
             if player:
-                points = stats['stats']['total_points']
-                player.extend_history(gw, points)
+                stats = player_stats['stats']
+                player.extend_history(gw, stats)
