@@ -3,3 +3,5 @@ pandas==2.2.3
 mypy==1.14.1
 types-requests==2.32.0.20241016
 pandas-stubs==2.2.3.241126
+tensorflow==2.18.0
+keras==3.8.0

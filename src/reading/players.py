@@ -1,6 +1,8 @@
 """players module"""
 
-from typing import Iterator
+from __future__ import annotations
+
+from typing import Iterator, Any
 
 import pandas as pd
 
@@ -14,6 +16,35 @@ class Player:
         self.id = player_id
         self.name = name
         self.history: list[dict] = []
+
+    @classmethod
+    def from_csv(cls, path: str) -> Player:
+        """
+
+        :param path:
+        :return:
+        """
+        raw_frame = pd.read_csv(path, index_col=0)
+        history = []
+        for i in range(1, raw_frame.shape[0] + 1):
+            gw_stats: dict[str, Any] = {}
+            stats = raw_frame.loc[i].to_dict()
+            gw_stats.update({"gw": i})
+            gw_stats.update({"stats": stats})
+            history.append(gw_stats)
+
+        name = history[0]["stats"]["name"]
+        player_id = history[0]["stats"]["id"]
+
+        player = cls(player_id, name)
+
+        for gw in history:
+            gw["stats"].pop("name")
+            gw["stats"].pop("id")
+
+            player.extend_history(gw["gw"], gw["stats"])
+
+        return player
 
     def extend_history(self, gw: int, stats: dict) -> None:
         """
@@ -34,11 +65,11 @@ class Player:
         """
         df = pd.DataFrame()
         for i in self.history:
-            new_df = pd.DataFrame(i['stats'], index=[i['gw']])
+            new_df = pd.DataFrame(i["stats"], index=[i["gw"]])
             df = pd.concat([df, new_df])
 
-        df['name'] = self.name
-        df['id'] = self.id
+        df["name"] = self.name
+        df["id"] = self.id
         return df
 
 
@@ -91,8 +122,8 @@ class PlayerRoster:
         :return:
         """
         for player_stats in gw_stats:
-            player_id = player_stats['id']
+            player_id = player_stats["id"]
             player = self.find_by_id(player_id)
             if player:
-                stats = player_stats['stats']
+                stats = player_stats["stats"]
                 player.extend_history(gw, stats)
