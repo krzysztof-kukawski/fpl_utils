@@ -15,6 +15,7 @@ class FPLCaller:
     FPL api caller class, gets names of players from a single url,
     then gets their per game week stats
     """
+
     def __init__(self, roster_class: type[PlayerRoster]) -> None:
         self._roster_class = roster_class
         self.roster: PlayerRoster
@@ -49,9 +50,7 @@ class FPLCaller:
 
     @staticmethod
     def _get(url: str) -> dict:
-        data: Response = requests.get(
-            url, timeout=60
-        )
+        data: Response = requests.get(url, timeout=60)
         data_content: dict = json.loads(data.content)
 
         return data_content

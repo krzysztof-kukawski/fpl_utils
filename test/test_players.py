@@ -1,5 +1,6 @@
-import unittest
 import os
+import unittest
+
 import pandas as pd
 from pandas.testing import assert_frame_equal
 
@@ -12,7 +13,7 @@ class PlayerTest(unittest.TestCase):
         test_player.extend_history(11, {"points": 8})
         test_player.extend_history(1, {"points": 3})
 
-        actual = [{"gw": 11, 'stats': {'points': 8}}, {"gw": 1, 'stats': {'points': 3}}]
+        actual = [{"gw": 11, "stats": {"points": 8}}, {"gw": 1, "stats": {"points": 3}}]
         self.assertEqual(test_player.history, actual)
 
     def test_to_dataframe(self):
@@ -20,13 +21,20 @@ class PlayerTest(unittest.TestCase):
         test_data = os.path.join(cwd, "data", "test_player.csv")
 
         test_player = Player(9, "test_player")
-        test_player.extend_history(11, {'points': 8})
-        test_player.extend_history(1, {'points': 3})
+        test_player.extend_history(1, {"points": 8})
+        test_player.extend_history(2, {"points": 3})
 
         player_frame = test_player.to_dataframe()
         test_frame = pd.read_csv(test_data, index_col=0)
 
         assert_frame_equal(player_frame, test_frame)
+
+    def test_from_csv(self):
+        cwd = os.path.dirname(__file__)
+        test_data = os.path.join(cwd, "data", "test_player.csv")
+        test_player = Player.from_csv(test_data)
+
+        assert test_player is not None
 
 
 class PlayerRosterTest(unittest.TestCase):
@@ -79,14 +87,22 @@ class PlayerRosterTest(unittest.TestCase):
 
     def test_extend_history(self):
         gw1 = [
-            {'id': 721, 'stats': {'total_points': 3}},
-            {'id': 722, 'stats': {'total_points': 0}}]
+            {"id": 721, "stats": {"total_points": 3}},
+            {"id": 722, "stats": {"total_points": 0}},
+        ]
         gw2 = [
-            {'id': 721, 'stats': {'total_points': 1}},
-            {'id': 722, 'stats': {'total_points': 9}}]
+            {"id": 721, "stats": {"total_points": 1}},
+            {"id": 722, "stats": {"total_points": 9}},
+        ]
 
-        extended_hist_1 = [{"gw": 1, 'stats': {'total_points': 3}}, {"gw": 2, 'stats': {'total_points': 1}}]
-        extended_hist_2 = [{"gw": 1, 'stats': {'total_points': 0}}, {"gw": 2, 'stats': {'total_points': 9}}]
+        extended_hist_1 = [
+            {"gw": 1, "stats": {"total_points": 3}},
+            {"gw": 2, "stats": {"total_points": 1}},
+        ]
+        extended_hist_2 = [
+            {"gw": 1, "stats": {"total_points": 0}},
+            {"gw": 2, "stats": {"total_points": 9}},
+        ]
 
         test_players = [
             {"id": 721, "web_name": "test_player1"},
