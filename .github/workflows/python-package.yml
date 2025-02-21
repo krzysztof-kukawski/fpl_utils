@@ -42,4 +42,4 @@ jobs:
 
     - name: Run mypy
       run: |
-        mypy src/
+        mypy src/ --ignore-missing-imports

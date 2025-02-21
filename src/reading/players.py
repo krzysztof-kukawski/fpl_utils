@@ -6,6 +6,8 @@ from typing import Iterator, Any
 
 import pandas as pd
 
+from src.prediction.time_steps import TimeStepsTransformer
+
 
 class Player:
     """
@@ -71,6 +73,18 @@ class Player:
         df["name"] = self.name
         df["id"] = self.id
         return df
+
+    def to_time_steps(self, n_time_steps: int) -> pd.DataFrame:
+        """
+
+        :param n_time_steps:
+        :return:
+        """
+        df = self.to_dataframe()
+        transformer = TimeStepsTransformer(df)
+        transformed = transformer.transform(n_time_steps)
+
+        return transformed
 
 
 class PlayerRoster:
