@@ -5,3 +5,4 @@ types-requests==2.32.0.20241016
 pandas-stubs==2.2.3.241126
 tensorflow==2.18.0
 keras==3.8.0
+numpy==2.0.2
